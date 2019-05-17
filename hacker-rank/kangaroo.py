@@ -26,7 +26,10 @@ def kangaroo(x1, v1, x2, v2):
 kangaroo(0, 2, 5, 3)
 kangaroo(0, 3, 4, 2)
 kangaroo(4602, 8519, 7585, 8362)
+(5 - 2) % (3 - 2)
+(4 - 0) % (2 - 3)
 
+4 % -2
 
 if __name__ == '__main__':
     fptr = open(os.environ['OUTPUT_PATH'], 'w')
