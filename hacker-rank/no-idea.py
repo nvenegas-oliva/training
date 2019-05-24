@@ -1,4 +1,3 @@
-
 def no_idea(N, A, B):
     return sum(1 for n in N if n in A) - sum(1 for n in N if n in B)
 
