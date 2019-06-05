@@ -2,7 +2,7 @@ import os
 from itertools import combinations
 from collections import Counter
 # It's not 2+1, it's(k//2)+1.
-# Consider k = 3. You want to add max(counts[1], counts[2]) to count. Since 3//2 = 1, without + 1 you would have range(1, 1), which is [].
+# Consider k = 3. You want # TODO:  add max(counts[1], counts[2]) to count. Since 3//2 = 1, without + 1 you would have range(1, 1), which is [].
 
 
 def nonDivisibleSubset(k, S):
