@@ -1,3 +1,4 @@
+
 CREATE TABLE product_groups (
    group_id serial PRIMARY KEY,
    group_name VARCHAR (255) NOT NULL
@@ -109,3 +110,30 @@ SELECT product_name, group_name, price,
    	) AS highest_price_per_group
 FROM products
 INNER JOIN product_groups USING (group_id);
+
+SELECT product_name, group_name, price,
+	LAG(price, 1) OVER (
+		PARTITION BY group_name
+      	ORDER BY price
+   	) AS prev_price, 
+	price - LAG(price, 1) OVER (
+		PARTITION BY group_name
+      	ORDER BY price
+	) AS cur_prev_diff
+FROM products
+INNER JOIN product_groups USING (group_id);
+
+
+SELECT product_name, group_name, price, 
+	LEAD(price, 1) OVER(
+		PARTITION BY group_name
+		ORDER BY price
+	) AS next_price, 
+	price - LEAD(price, 1) OVER (
+		PARTITION BY group_name
+		ORDER BY price
+	) AS cur_next_diff
+FROM products
+INNER JOIN product_groups USING(group_id);
+
+-- http://www.postgresqltutorial.com/postgresql-window-function/
