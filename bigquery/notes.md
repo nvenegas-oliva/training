@@ -57,11 +57,14 @@ ORDER BY
 
 ![](img/4.png)
 
-* Arrays and Structures (video)
+##### - Arrays and Structures (video)
 
 * Queremos conseguir top 2 títulos en función del score para la tabla `stories`.
 
-* El resultado de:
+1. Crear array de (`titles`, `scores`)
+2. Extraer la fecha de `time_ts`
+3. Agrupar por la fecha
+* Entonces, la query es:
 
 ```sql
 SELECT
@@ -73,31 +76,41 @@ WHERE
     AND title IS NOT NULL
 GROUP BY date
 ```
-corresponde a:
+y el resultado correspondiente:
 
 ![](img/5.png)
 
 * La query final corresponde a:
 ```sql
 WITH TitlesAndScores AS (
-  SELECT
-    ARRAY_AGG(STRUCT(title, score)) AS titles,
-    EXTRACT(DATE FROM time_ts) AS date
+    SELECT
+        ARRAY_AGG(STRUCT(title, score)) AS titles,
+        EXTRACT(DATE FROM time_ts) AS date
 FROM `bigquery-public-data.hacker_news.stories`
 WHERE
-  score IS NOT NULL
-  AND title IS NOT NULL
+    score IS NOT NULL
+    AND title IS NOT NULL
 GROUP BY date)
 SELECT date,
-  ARRAY(
-    SELECT AS STRUCT
-      title,
-      score FROM
-      UNNEST(titles)
-      ORDER BY score DESC
-      LIMIT 2) AS top_articles
+    ARRAY(
+        SELECT AS STRUCT
+            title,
+            score FROM
+            UNNEST(titles)
+        ORDER BY score DESC
+        LIMIT 2) AS top_articles
 FROM TitlesAndScores;
 ```
-De la query es:
+
+* Donde `ARRAY(SELECT AS STRUCT ...`:
+    1. Desarma el array de la cláusula `WITH` utilizando `UNNEST` function.
+    2. Los ordena por el `score` tomando los top 2.
+    3. Crea un nuevo array con los resultados obtenidos.
+* La query externa:
+    1. Proyecta la columna `date`.
+    2. Proyecta el array.
+
+
+Resultado correspondiente es:
 
 ![](img/6.png)
