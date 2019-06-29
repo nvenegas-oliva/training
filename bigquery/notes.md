@@ -114,3 +114,35 @@ FROM TitlesAndScores;
 Resultado correspondiente es:
 
 ![](img/6.png)
+
+
+##### - Join condition and Window Functions (video)
+
+
+```sql
+SELECT
+    name,
+    SUM(number) AS occurrences
+FROM `bigquery-public-data.usa_names.usa_1910_2013`
+GROUP BY name
+ORDER BY occurrences DESC LIMIT 100
+```
+
+
+```sql
+WITH TopNames AS (
+    SELECT
+        name,
+        SUM(number) AS occurrences
+    FROM `bigquery-public-data.usa_names.usa_1910_2013`
+    GROUP BY name
+    ORDER BY occurrences DESC LIMIT 100
+)
+SELECT name, SUM(word_count) AS frequency
+FROM TopNames
+JOIN `bigquery-public-data.samples.shakespeare`
+ON STARTS_WITH(word, name)
+GROUP BY name
+ORDER BY frequency DESC
+LIMIT 100
+```
