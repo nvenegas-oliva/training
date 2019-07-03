@@ -38,3 +38,16 @@ Entrega continua corresponde a una recopilación de muchas de las mejores práct
 En síntesis, continuous integration es parte de continuous delivery y  continuous deployment. Y continuous deployment es como continuous delivery, excepto que las versiones se producen automáticamente.
 
 ![](img/1.png)
+
+* CD principales beneficios:
+    * Velocidad
+    * Productividad
+    * Sostenibilidad
+* Reducir la dificultad del release aumentando su frecuencia.
+* Los pipelines automatizados de software delivery ayudan a las organizaciones a responder mejor a los cambios del mercado.
+* Con un bajo Time2Market, las organizaciones tienen una mejor oportunidad de superar su competencia y mantenerse en el negocio.
+* La velocidad por sí misma no es una métrica de éxito. Sin calidad, la velocidad es inútil.
+* Permite a los equipos centrarse en la visión del producto mientras que las los pipelines realizan la ejecución de las tareas tediosas.
+* CD requiere una gran revisión en los procesos técnicos, la cultura operativa y el pensamiento organizacional.
+
+##### CD Metrics
