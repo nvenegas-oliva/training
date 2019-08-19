@@ -49,3 +49,34 @@
 - Para ejecutar en python:
 
 ![](img/5.png)
+
+
+##### - MapReduce and Parallel Processing (video)
+
+![](img/6.png)
+
+- `ParDo` permite el procesamiento paralelo.
+    - Múltiples instancias de la clase en múltiples máquinas.
+    - No debe contener un estado.
+- En código:
+
+![](img/7.png)
+
+##### - GroupBy and Combine (video)
+
+![](img/8.png)
+
+![](img/9.png)
+
+- Se debe preferir `combine` sobre `groupByKey` en caso de la que agregación ya se encuentre implementada.
+
+![](img/10.png)
+
+##### - Side Inputs (video)
+
+- Si se necesitan valore fijos (que no cambian), éstos pueden ser pasados como parámetros a las transformaciones.
+- En caso de que se necesiten más de una fuente, las siguientes (suelen ser las más pequeñas) deben ser convertidas a una vista.
+    - `PCollection` a `PCollectionView`.
+
+
+![](img/11.png)
