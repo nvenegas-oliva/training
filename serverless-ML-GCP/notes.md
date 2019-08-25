@@ -12,5 +12,6 @@
 
 ![](img/2.png)
 
-- Una neurona es una forma de combinar las entradas y tomar una decisión sobre ellas. 
+- Una neurona es una forma de combinar las entradas y tomar una decisión sobre ellas.
+
 ![](img/3.png)
