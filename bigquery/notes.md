@@ -146,3 +146,95 @@ GROUP BY name
 ORDER BY frequency DESC
 LIMIT 100
 ```
+
+##### - Performance and Pricing (video)
+
+- El procesamiento en BigQuery es columnar. Entonces al utilizar `SELECT *` se recuperan y procesan todas las columnas. No hacerlo a no ser de que se necesiten en realidad en el procesamiento.
+- Menos trabao implica una query más rápida.
+- Donde "menos trabajo" conlleva:
+    - I/O: Cuántos bytes leíste?
+    - Shuffle: Cuántos bytes pasaste a la siguiente etapa?
+        - Grouping: Cuántos bytes pasaste entre los grupos?
+    - Materialization: Cuántos bytes escribiste?
+    - CPU work: UDFs, funciones más costosas que otras. Por ejemplo sin() y cos() vs una suma.
+- Filtrar lo antes posible para procesar menos datos en las etapas siguientes.
+- Hacer primero los `JOIN` más grandes primero.
+- Intentar filtrar antes de hacer el `JOIN`.
+- Una cardinalidad baja en los `GROUP BY` es rápida.
+    - Una cardinalidad baja es la que tiene pocos datos (grouping). En el ejemplo de los commits durante los fines de semana, una baja cardinalidad corresponde a Haskell, mientras que una alta sería Javascript.
+    - Grouping: Cuánta data estoy agregando por key y por agregación?
+- Si se tienen muchas claves el problema también será de alta cardinalidad (más grupos) lo que implica que habrá un problema de shuffling (tendrá mucha latencia final).
+- Al momento de crear funciones hay que tener en consideración la sobrecarga de CPU que implica esa función. El siguiente lineamiento es de más a menos eficiente:
+    - Las funciones integradas (built-in).
+    - Construir propias funciones SQL.
+    - UDFs en Javascript.
+- Considerar las funciones `ÀPROX` de BigQuery. Ya que entregan resultados razonablemente buenos en tiempos mucho menores.
+- Primero filtrar y luego ordenar.
+
+
+##### - Wildcard Tables and Partitioning (video)
+
+- Para llamar a múltiples tablas se pueden utilizar wilcards:
+
+```sql
+SELECT *
+FROM `bigquery-public-data.noaa_gsod.gsod*`
+LIMIT 1000
+```
+- Table partitioning:
+
+![](img/7.png)
+
+- Para monitorear performance:
+    - Por query analizar qué hizo la query utilizando el plan.
+    - Monitoreo a nivel de proyecto a través de Google StackDriver.
+
+- Para la siguiente query el plan es como sigue:
+
+```sql
+WITH TopNames AS (
+    SELECT
+        name,
+        SUM(number) AS occurrences
+    FROM `bigquery-public-data.usa_names.usa_1910_2013`
+    GROUP BY name
+    ORDER BY occurrences DESC LIMIT 100
+)
+SELECT name, SUM(word_count) AS frequency
+FROM TopNames
+JOIN `bigquery-public-data.samples.shakespeare`
+ON STARTS_WITH(word, name)
+GROUP BY name
+ORDER BY frequency DESC
+LIMIT 100
+```
+
+![](img/8.png)
+
+- Se debe tener en consideración [la intrepretación](https://cloud.google.com/bigquery/query-plan-explanation?hl=es-419)  del plan de ejecución:
+
+![](img/9.png)
+
+- Hay que tener en consideración la desviación de cada etapa.
+
+
+##### - BigQuery Plans and Categories (video)
+
+- Se deben buscan cualquier etapa que presente una diferencia significativa entre el avg y el max time.
+    - Observar la cantidad de tiempo que se gasta esperando en cada etapa.
+- Categorías en pricing:
+    - Free:
+        - Loading
+        - Exporting
+        - Queries on metadata
+        - Cached queries
+        - Queries with error
+    - Processing:
+        - On-demand OR Flat-rate plans
+        - On-demand based on amount of data processed
+        - 1 TB/Month free
+        - Have to opt-in to run high-compute queries.
+    - Storage:
+        - Amount of data in teble
+        - Ingest rate of streaming data
+        - Automatic discount for old data

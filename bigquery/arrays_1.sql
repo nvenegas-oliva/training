@@ -32,3 +32,8 @@ SELECT *
 FROM UNNEST([3, 1, 3, 4]) AS numbers
 WITH OFFSET AS offset
 ORDER BY offset DESC;
+
+-- Crea y muestra el contenido de una lista de tipo STRUCT
+SELECT *, struct_value
+FROM UNNEST(ARRAY<STRUCT<x INT64, y STRING>>[(1, 'foo'), (3, 'bar')])
+       AS struct_value;
