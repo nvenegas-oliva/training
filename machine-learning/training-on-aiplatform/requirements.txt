@@ -1,0 +1,7 @@
+pandas
+pandas-gbq
+scikit-learn
+google-cloud-bigquery-storage
+google-api-python-client
+fastavro
+tqdm
